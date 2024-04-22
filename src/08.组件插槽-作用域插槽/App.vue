@@ -1,10 +1,9 @@
 <template>
   <div>
     <show-message :names="names">
-      <template  v-slot.default="props">
+      <template  v-slot:default="props">
         <h1>姓名：{{ props.item }} --- 序号：{{ props.index }}</h1>
       </template>
-   
     </show-message>
   </div>
 </template>
