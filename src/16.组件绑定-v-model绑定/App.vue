@@ -17,12 +17,17 @@
     data() {
       return {
         name: 'kebo',
-        message:'hello world'
+        message: 'hello world'
       }
     },
     components: {
       Home,
       About
+    },
+    methods: {
+      printName() {
+        // this.name = $event
+      }
     }
   }
 </script>

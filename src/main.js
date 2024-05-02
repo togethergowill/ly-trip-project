@@ -1,3 +1,3 @@
 import { createApp } from 'vue'
-import App from "./17.组件抽取-mixins属性使用/App.vue"
+import App from "./16.组件绑定-v-model绑定/App.vue"
 createApp(App).mount('#app')
