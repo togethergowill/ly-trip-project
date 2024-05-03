@@ -1,0 +1,23 @@
+ul,
+li,
+h1,
+h2,
+h3,
+h4,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+img {
+  vertical-align: top;
+}
