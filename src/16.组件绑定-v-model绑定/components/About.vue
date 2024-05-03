@@ -25,7 +25,7 @@ export default {
       type:String,
     }
   },
-  emits:['update:ly','updata:modelValue'],
+  emits:['update:ly','update:modelValue'],
   methods:{
     aboutBtnClick(){
       this.$emit('update:ly',this.message)
