@@ -24,4 +24,4 @@ class lyAxios {
   }
 }
 
-export default new lyAxios()
+export default new lyAxios(BASEURL,TIMEOUT)

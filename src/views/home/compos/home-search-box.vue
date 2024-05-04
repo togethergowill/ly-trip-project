@@ -15,6 +15,7 @@
   import axios from "axios"
   import useLocationStore from '@/stores/moudles/location';
   import { storeToRefs } from 'pinia';
+  import router from '@/router'
 
   const locationStore = useLocationStore()
 
@@ -30,8 +31,8 @@
   }
 
   // 2. 处理点击城市名实现to city页面
-  function cityBtnClick(){
-    console.log('it is ok')
+  function cityBtnClick() {
+    router.push('/city')
   }
 
 

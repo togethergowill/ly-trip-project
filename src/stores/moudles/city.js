@@ -1,12 +1,16 @@
 import { defineStore } from "pinia";
+import { getCityAll } from "@/services/moudles/city";
 
-const useCityStore = defineStore('city',{
+const useCityStore = defineStore('city', {
   state: () => ({
-    person: {
-      name: 'kebo',
-        age: 18
+    allCities: {}
+  }),
+  actions: {
+    async fetchCityAllData() {
+      const res = await getCityAll()
+      this.allCities = res.data
     }
-  })
+  }
 })
 
 export default useCityStore
