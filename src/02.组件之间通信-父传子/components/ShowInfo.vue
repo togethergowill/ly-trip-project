@@ -2,8 +2,6 @@
   <div class="show-info">
     <h1>ShowInfo</h1>
     <h2>姓名：{{ name }}</h2>
-    <h2>年龄：{{ age }}</h2>
-    <h2>身高：{{ height }}</h2>
     <h3>{{ ShowMessage }}</h3>
     <div class="goods">
       <ul>
@@ -20,7 +18,8 @@
       <h3>{{ propF }}</h3>
     </div>
   </div>
-  <div class="show-msg" :age="$attrs.age">
+  <!-- 多根情况使用v-bind="$attrs" 或者:age="$attrs.age" 进行显示绑定 -->
+  <div class="others" :age="$attrs.age" >
     你好
   </div>
 </template>
@@ -29,9 +28,10 @@
   export default {
     data() {
       return {
+  
       }
     },
-    inheritAttrs:false,
+    // inheritAttrs:false,
     // props:['name','age','height']
     props: {
       name: {
