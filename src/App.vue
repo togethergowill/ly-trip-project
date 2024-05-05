@@ -1,8 +1,9 @@
 <template>
   <div class="app">
     <router-view></router-view>
+
     <!-- <tabbar></tabbar>     -->
-    <tabbar v-if="!route.meta.hideTabbar"></tabbar>    
+    <tabbar v-if="!route.meta.hideTabbar"></tabbar>
   </div>
 </template>
 
@@ -21,4 +22,3 @@
 </script>
 
 <style scoped></style>
-  

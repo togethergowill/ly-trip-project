@@ -1,7 +1,7 @@
 <template>
   <div class="search-box">
     <div class="address">
-      <div class="city" @click="cityBtnClick">{{ city }}</div>
+      <div class="city" @click="cityBtnClick">{{ cityInfo }}</div>
       <div class="location" @click="locationClick">
         <span class="text">我的位置</span>
         <img src="@/assets/img/home/icon_location.png" alt="">
@@ -20,21 +20,19 @@
   const locationStore = useLocationStore()
 
   // 1. 处理根据实时经纬度信息返回城市地址（我的位置）
-  const city = ref('北京')
-  locationStore.getLocation()
+  const cityInfo = computed(() => {
+    const tempCity = locationStore.cityInfo
+    return tempCity.city instanceof Array ? tempCity.province : tempCity.city ?? "北京"
+  })
+
   function locationClick() {
     locationStore.getLocation()
-    let cityInfo = locationStore.cityInfo
-    if (cityInfo.city instanceof Array) {
-      city.value = cityInfo.province
-    } else city.value = cityInfo.city
   }
 
   // 2. 处理点击城市名实现to city页面
   function cityBtnClick() {
     router.push('/city')
   }
-
 
 
 </script>
