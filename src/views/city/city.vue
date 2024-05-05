@@ -6,13 +6,14 @@
 
       <van-tabs v-model:active="activeIndex" color="#ff9854">
         <template v-for="(value, key, index) in allCities">
-          <van-tab :name="index" :title="value.title">内容 {{ index }}</van-tab>
+          <van-tab :name="index" :title="value.title">
+          </van-tab>
         </template>
       </van-tabs>
     </div>
     <div class="content">
+      <city-group :allCities="allCities"></city-group>
     </div>
-    <!-- <button @click="btnClick">按钮</button> -->
   </div>
 </template>
 
@@ -21,11 +22,7 @@
   import router from '@/router';
   import useCityStore from '@/stores/moudles/city'
   import { storeToRefs } from 'pinia';
-
-  // function btnClick(){
-  //   console.log(allCities.value)
-  //   console.log("store",cityStore.allCities)
-  // }
+  import cityGroup from './compos/city-group.vue'
 
   // 1. input搜索栏的数据和函数
   const value = ref('')
@@ -48,8 +45,37 @@
 <style lang="less" scoped>
 .city {
 
-  .content {
-    height: calc(100vh);
+  // 4. 实现top的固定
+  // 1）实现方式一：
+  // .top {
+  //   position: fixed;
+  //   left: 0;
+  //   right: 0;
+  //   top: 0;
+
+  // }
+
+  // .content {
+  //   margin-top: 98px;
+  // }
+
+  // 2）实现方式二：
+  .top {
+    position: relative;
+    z-index: 9;
   }
+
+  .content {
+    position: relative;
+    overflow-y: auto;
+    height: calc(100vh - 98px);
+
+    :deep(.van-index-bar__sidebar) {
+      top: 98px;
+      transform: translateY(0);
+    }
+
+  }
+
 }
 </style>

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getCityAll } from "@/services/moudles/city";
+import { getCityAll } from "@/services";
 
 const useCityStore = defineStore('city', {
   state: () => ({
