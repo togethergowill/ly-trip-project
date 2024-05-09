@@ -12,12 +12,12 @@
       <div class="stay-time border-item" @click="stayRowClick">
         <div class="start-box time-item">
           <div class="text">入住</div>
-          <div class="time">{{ checkInDate }}</div>
+          <div class="time">{{ checkInDay }}</div>
         </div>
         <div class="during">共{{ duringDay }}晚</div>
         <div class="end-box time-item">
           <div class="text">离店</div>
-          <div class="time">{{ leaveDate }}</div>
+          <div class="time">{{ leaveDay }}</div>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
   import useLocationStore from '@/stores/moudles/location';
   import { storeToRefs } from 'pinia';
   import router from '@/router'
-  import useDayStore from "@/stores/moudles/day"
+  import { getDate, getNextDate, getIntervalDate, getFormatDate } from "@/utils/manage_date"
   import useHomeStore from "@/stores/moudles/home"
 
   // 1. 处理根据实时经纬度信息返回城市地址（我的位置）
@@ -75,19 +75,20 @@
 
 
   // 3. 处理用户停留时间
-  const dayStore = useDayStore()
-  const { getDay, nextDay, intervalDay } = storeToRefs(dayStore)
-  const duringDay = ref(intervalDay.value())
-  const checkInDate = ref(getDay.value())
-  const leaveDate = ref(nextDay.value())
+  const checkinDate = getDate()
+  const leaveDate = getNextDate()
+
+  const checkInDay = ref(getFormatDate(checkinDate))
+  const leaveDay = ref(getFormatDate(leaveDate))
+  const duringDay = ref(getIntervalDate(checkinDate, leaveDate))
 
   const show = ref(false)
   // 3.1 点击日历确认键后，获取日历的数据，并赋值给入住时间和离开时间
   function onConfirm(values) {
-    checkInDate.value = getDay.value(values[0])
-    leaveDate.value = getDay.value(values[1])
+    checkInDay.value = getFormatDate(values[0])
+    leaveDay.value = getFormatDate(values[1])
     // 根据时间获取入住天数
-    duringDay.value = intervalDay.value(values[0], values[1])
+    duringDay.value = getIntervalDate(values[0], values[1])
     show.value = false
   }
   // 3.2 标注入店和离店的flag
@@ -118,8 +119,8 @@
     router.push({
       path: '/search',
       query: {
-        checkInDate: checkInDate.value,
-        leaveDate: leaveDate.value,
+        checkInDay: checkInDay.value,
+        leaveDay: leaveDay.value,
         cityInfo: cityInfo.value,
       }
     })
