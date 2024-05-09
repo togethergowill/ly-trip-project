@@ -1,9 +1,17 @@
  :root {
    --primary-color: #ff9854;
    --van-gray-6: var(--primary-color);
-   --van-primary-color:var(--primary-color)
+   --van-primary-color: var(--primary-color)
  }
 
- body {
+ body,
+ button,
+ input,
+ select,
+ td,
+ textarea,
+ th {
+   font-family: PingFangSC-Regular, Helvetica Neue, sans-serif;
    font-size: 14px;
+   color: #333;
  }

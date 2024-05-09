@@ -1,12 +1,50 @@
 <template>
   <div class="search-box">
-    <div class="address">
-      <div class="city" @click="cityBtnClick">{{ cityInfo }}</div>
-      <div class="location" @click="locationClick">
-        <span class="text">我的位置</span>
-        <img src="@/assets/img/home/icon_location.png" alt="">
+    <div class="search-top">
+      <div class="address border-item">
+        <div class="city" @click="cityBtnClick">{{ cityInfo }}</div>
+        <div class="location" @click="locationClick">
+          <span class="text">我的位置</span>
+          <img src="@/assets/img/home/icon_location.png" alt="">
+        </div>
       </div>
+
+      <div class="stay-time border-item" @click="stayRowClick">
+        <div class="start-box time-item">
+          <div class="text">入住</div>
+          <div class="time">{{ checkInDate }}</div>
+        </div>
+        <div class="during">共{{ duringDay }}晚</div>
+        <div class="end-box time-item">
+          <div class="text">离店</div>
+          <div class="time">{{ leaveDate }}</div>
+        </div>
+      </div>
+
+      <van-calendar v-model:show="show" type="range" @confirm="onConfirm" :round="false" :formatter="formatter" />
+
+
+      <div class="condition-box border-item">
+        <div class="price">价格不限</div>
+        <div class="person">人数不限</div>
+      </div>
+
+      <div class="default-search border-item">关键字/位置/民宿名</div>
     </div>
+
+    <div class="hot-tags-box">
+      <template v-for="item in hotSuggets">
+        <span class="hot-tag" :style="{ color: item.tagText.color, background: item.tagText.background.color }">
+          {{ item.tagText.text }}
+        </span>
+      </template>
+
+    </div>
+
+    <div class="search-button">
+      <div class="btn" @click="searchBtnClick">开始搜索</div>
+    </div>
+
   </div>
 </template>
 
@@ -16,10 +54,11 @@
   import useLocationStore from '@/stores/moudles/location';
   import { storeToRefs } from 'pinia';
   import router from '@/router'
-
-  const locationStore = useLocationStore()
+  import useDayStore from "@/stores/moudles/day"
+  import useHomeStore from "@/stores/moudles/home"
 
   // 1. 处理根据实时经纬度信息返回城市地址（我的位置）
+  const locationStore = useLocationStore()
   const cityInfo = computed(() => {
     const tempCity = locationStore.cityInfo
     return tempCity.city instanceof Array ? tempCity.province : tempCity.city ?? "北京"
@@ -35,38 +74,189 @@
   }
 
 
+  // 3. 处理用户停留时间
+  const dayStore = useDayStore()
+  const { getDay, nextDay, intervalDay } = storeToRefs(dayStore)
+  const duringDay = ref(intervalDay.value())
+  const checkInDate = ref(getDay.value())
+  const leaveDate = ref(nextDay.value())
+
+  const show = ref(false)
+  // 3.1 点击日历确认键后，获取日历的数据，并赋值给入住时间和离开时间
+  function onConfirm(values) {
+    checkInDate.value = getDay.value(values[0])
+    leaveDate.value = getDay.value(values[1])
+    // 根据时间获取入住天数
+    duringDay.value = intervalDay.value(values[0], values[1])
+    show.value = false
+  }
+  // 3.2 标注入店和离店的flag
+  const formatter = (day) => {
+    const month = day.date.getMonth() + 1;
+    const date = day.date.getDate();
+    if (day.type === 'start') {
+      day.bottomInfo = '入住';
+    } else if (day.type === 'end') {
+      day.bottomInfo = '离店';
+    }
+    return day;
+  };
+
+  // 用户入住栏点击事件，设置show为true展示日历
+  function stayRowClick() {
+    show.value = true
+  }
+
+  // 4. hotSuggests数据的展示
+  // 4.1 拿取hotSuggests数据
+  const homeStore = useHomeStore()
+  homeStore.fetchHomeHotSuggests()
+  const { hotSuggets } = storeToRefs(homeStore)
+
+  // 5. 点击搜索按钮跳转到search页面
+  function searchBtnClick() {
+    router.push({
+      path: '/search',
+      query: {
+        checkInDate: checkInDate.value,
+        leaveDate: leaveDate.value,
+        cityInfo: cityInfo.value,
+      }
+    })
+  }
 </script>
 
 <style lang="less" scoped>
 .search-box {
-  .address {
-    display: flex;
-    align-items: center;
-    height: 41px;
-    padding: 0 20px;
+  --van-calendar-popup-height: 100%;
 
-    .city {
-      flex: 1;
-      color: #333;
-      font-size: 15px;
+  .search-top {
+    padding: 0px 20px 0px 20px;
+
+    .border-item {
+      box-sizing: border-box;
+      border-bottom: 1px solid #f8f9f9;
+      height: 40px;
     }
 
-    .location {
-      width: 74px;
+    .address {
       display: flex;
       align-items: center;
+      height: 40px;
+
+      .city {
+        flex: 1;
+        color: #333;
+        font-size: 15px;
+      }
+
+      .location {
+        width: 74px;
+        display: flex;
+        align-items: center;
+
+        .text {
+          position: relative;
+          top: 1px;
+          font-size: 12px;
+          color: #666;
+        }
+
+        img {
+          width: 20px;
+          margin-left: 3px;
+        }
+      }
+    }
+
+    .stay-time {
+      display: flex;
+      height: 44px;
+      box-sizing: border-box;
+      align-items: center;
+
+      .time-item {
+        display: flex;
+        flex-direction: column;
+      }
 
       .text {
-        position: relative;
-        top: 1px;
-        font-size: 12px;
-        color: #666;
+        font-size: 10px;
+        color: #999;
       }
 
-      img {
-        width: 20px;
-        margin-left: 3px;
+      .time {
+        font-size: 15px;
+        color: #333;
+        margin-top: 2px;
       }
+
+      .during {
+        font-size: 12px;
+        color: #666;
+        flex: 4;
+        text-align: center;
+      }
+
+      .end-box {
+        flex: 3;
+      }
+    }
+
+    .condition-box {
+      display: flex;
+      color: #999;
+      align-items: center;
+
+      .price {
+        flex: 3;
+        line-height: 40px;
+        border-right: 1px solid #f8f9f9;
+      }
+
+      .person {
+        flex: 2;
+      }
+    }
+
+    .default-search {
+      color: #999;
+      line-height: 40px;
+    }
+  }
+
+  .hot-tags-box {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 6px 12px 6px 16px;
+
+    .hot-tag {
+      color: rgb(63, 73, 84);
+      background-color: rgb(241, 243, 245);
+      border-radius: 14px;
+      padding: 4px 8px;
+      margin-right: 4px;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+  }
+
+  .search-button {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 4px;
+
+    .btn {
+      height: 10.13333vw;
+      width: 91.2vw;
+      font-weight: 500;
+      font-size: 18px;
+      color: #fff;
+      border-radius: 20px;
+      background-image: linear-gradient(90deg, #fa8c1d, #fcaf3f);
+      line-height: 10.13333vw;
+
     }
   }
 }
