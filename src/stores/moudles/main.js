@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
-import useDayStore from './day'
+import { getDate, getNextDate } from "@/utils/manage_date"
+const checkinDate = getDate()
+const leaveDate = getNextDate()
 
-const dayStore = useDayStore()
-const useMainStore = defineStore('main',{
-  state:()=>({
-    
+const useMainStore = defineStore('main', {
+  state: () => ({
+    checkinDate,
+    leaveDate,
   })
 })
+
+export default useMainStore

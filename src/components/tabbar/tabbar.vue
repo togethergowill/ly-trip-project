@@ -1,6 +1,6 @@
 <template>
   <div class="tabbar">
-    <van-tabbar v-model="currentIndex" active-color="#ff9854">
+    <van-tabbar v-model="currentIndex" active-color="#ff9854" :route="true">
       <template v-for="(item, index) in tabbarData">
         <van-tabbar-item :to="item.path">
           <template #icon>
@@ -15,18 +15,18 @@
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue'
+  import { ref, reactive, watch } from 'vue'
   import tabbarData from '@/assets/data/tabbar';
   import { getAssetURL } from '@/utils/load_assets'
-  import { useRouter } from 'vue-router';
+  import { useRoute } from "vue-router"
 
   const currentIndex = ref(0)
-
-  const router = useRouter()
-  function itemClick(item, index) {
-    router.push(item.path)
-    currentIndex.value = index
-  }
+  const route = useRoute()
+  // 修复组件跳转路由，图标不渲染的bug
+  watch(route, (newValue) => {
+    currentIndex.value = tabbarData.findIndex(item => item.path === newValue.path)
+    if (currentIndex.value === -1) return
+  })
 
 </script>
 

@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <van-calendar v-model:show="show" type="range" @confirm="onConfirm" :round="false" :formatter="formatter" />
+      <van-calendar v-model:show="show" type="range" @confirm="onConfirm" :round="false" :formatter="formatter"  :show-confirm="false"/>
 
 
       <div class="condition-box border-item">
@@ -56,6 +56,7 @@
   import router from '@/router'
   import { getDate, getNextDate, getIntervalDate, getFormatDate } from "@/utils/manage_date"
   import useHomeStore from "@/stores/moudles/home"
+  import useMainStore from "@/stores/moudles/main"
 
   // 1. 处理根据实时经纬度信息返回城市地址（我的位置）
   const locationStore = useLocationStore()
@@ -75,20 +76,22 @@
 
 
   // 3. 处理用户停留时间
-  const checkinDate = getDate()
-  const leaveDate = getNextDate()
+  const mainStore = useMainStore()
+  const { checkinDate, leaveDate } = storeToRefs(mainStore)
 
-  const checkInDay = ref(getFormatDate(checkinDate))
-  const leaveDay = ref(getFormatDate(leaveDate))
-  const duringDay = ref(getIntervalDate(checkinDate, leaveDate))
+  const checkInDay = ref(getFormatDate(checkinDate.value))
+  const leaveDay = ref(getFormatDate(leaveDate.value))
+  const duringDay = ref(getIntervalDate(checkinDate.value, leaveDate.value))
 
   const show = ref(false)
   // 3.1 点击日历确认键后，获取日历的数据，并赋值给入住时间和离开时间
   function onConfirm(values) {
-    checkInDay.value = getFormatDate(values[0])
-    leaveDay.value = getFormatDate(values[1])
+    checkinDate.value = values[0]
+    leaveDate.value = values[1]
+    checkInDay.value = getFormatDate(checkinDate.value)
+    leaveDay.value = getFormatDate(leaveDate.value)
     // 根据时间获取入住天数
-    duringDay.value = getIntervalDate(values[0], values[1])
+    duringDay.value = getIntervalDate(checkinDate.value,leaveDate.value)
     show.value = false
   }
   // 3.2 标注入店和离店的flag

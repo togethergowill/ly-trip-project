@@ -4,12 +4,19 @@
       <div class="date">
         <div class="checkin-leave">
           <span class="text">住</span>
-          <span class="time">05.09</span>
+          <span class="time">{{ checkinDay }}</span>
         </div>
         <div class="checkin-leave leave">
           <span class="text">离</span>
-          <span class="time">05.10</span>
+          <span class="time">{{ leaveDay }}</span>
           <i class="icon"></i>
+        </div>
+      </div>
+      <div class="search">
+        <div class="keyword">
+          <span>关键字/位置/民宿名</span>
+        </div>
+        <div class="icon">
         </div>
       </div>
     </div>
@@ -17,7 +24,17 @@
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue'
+  import { ref, reactive, defineProps } from 'vue'
+  const props = defineProps({
+    checkinDay: {
+      type: String,
+      default: '05.08'
+    },
+    leaveDay: {
+      type: String,
+      default: "05.08"
+    }
+  })
 
 </script>
 
@@ -39,6 +56,7 @@
 
     .date {
       display: flex;
+      flex: 1;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -66,6 +84,7 @@
 
       .leave {
         position: relative;
+
         .icon {
           position: absolute;
           display: inline-block;
@@ -76,6 +95,30 @@
           // background-color: red;
           background: url("@/assets/img/home/home-sprite.png") -201px -157px / 207px 192px;
         }
+      }
+    }
+
+    .search {
+      display: flex;
+      flex: 6;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+
+      .keyword {
+        overflow: hidden;
+        word-wrap: normal;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        min-width: 115px;
+        font-size: 14px;
+        color: #999;
+      }
+
+      .icon {
+        width: 24px;
+        height: 24px;
+        background: url("@/assets/img/home/home-sprite.png") -29px -151px / 207px 192px;
       }
     }
   }
