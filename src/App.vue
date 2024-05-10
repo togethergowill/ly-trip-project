@@ -1,16 +1,17 @@
 <template>
   <div class="app">
     <router-view></router-view>
-
-    <!-- <tabbar></tabbar>     -->
     <tabbar v-if="!route.meta.hideTabbar"></tabbar>
+    <loading />
   </div>
 </template>
 
 <script setup>
   import { ref, reactive } from 'vue'
-  import useCityStore from './stores/moudles/city.js'
   import tabbar from './components/tabbar/tabbar.vue';
+  import loading from './components/loading/loading.vue';
+
+  import useCityStore from './stores/moudles/city.js'
   import { useRoute } from 'vue-router';
 
   const cityStore = useCityStore()

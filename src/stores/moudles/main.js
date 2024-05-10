@@ -7,6 +7,7 @@ const useMainStore = defineStore('main', {
   state: () => ({
     checkinDate,
     leaveDate,
+    
   })
 })
 
