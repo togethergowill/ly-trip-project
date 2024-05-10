@@ -114,7 +114,6 @@
   // 4. hotSuggests数据的展示
   // 4.1 拿取hotSuggests数据
   const homeStore = useHomeStore()
-  homeStore.fetchHomeHotSuggests()
   const { hotSuggets } = storeToRefs(homeStore)
 
   // 5. 点击搜索按钮跳转到search页面

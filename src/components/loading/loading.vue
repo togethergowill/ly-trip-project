@@ -1,5 +1,5 @@
 <template>
-  <div class="loading" v-show="isReachBottom">
+  <div class="loading" v-show="mainStore.isLoading">
     <div class="bg">
       <img src="@/assets/img/home/full-screen-loading.gif" alt="">
     </div>
@@ -9,7 +9,9 @@
 <script setup>
   import { ref, reactive } from 'vue'
   import { useScroll } from "@/hooks/useScroll"
+  import useMainStore from "@/stores/moudles/main"
 
+  const mainStore = useMainStore()
   const { isReachBottom } = useScroll()
 
 </script>

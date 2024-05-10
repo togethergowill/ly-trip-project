@@ -26,10 +26,13 @@
   import useMainStore from "@/stores/moudles/main"
   import { storeToRefs } from "pinia"
   import { getFormatDate } from "@/utils/manage_date"
-  
+
 
   const mainStore = useMainStore()
   const homeStore = useHomeStore()
+  
+  homeStore.fetchHomeCategories()
+  homeStore.fetchHomeHotSuggests()
   homeStore.fetchHomeHouseList()
   const { isReachBottom, scrollTop } = useScroll()
   // 使用watch属性监听isReachBottom是否发生改变，决定是否发起网络请求
