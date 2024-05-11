@@ -3,8 +3,8 @@
     <div class="title">热门精选</div>
     <div class="list">
       <template v-for="item in houseList" :key="item.data.houseId">
-        <house-item-v9 v-if="item.discoveryContentType ===9" :houseData="item.data" />
-        <house-item-v3 v-if="item.discoveryContentType ===3" :houseData="item.data"/>
+        <house-item-v9 v-if="item.discoveryContentType === 9" :houseData="item.data" @click="itemClick(item.data)" />
+        <house-item-v3 v-if="item.discoveryContentType === 3" :houseData="item.data" @click="itemClick(item.data)" />
       </template>
 
     </div>
@@ -17,22 +17,29 @@
   import houseItemV3 from '@/components/house-item-v3/house-item-v3.vue'
   import useHomeStore from '@/stores/moudles/home'
   import { storeToRefs } from 'pinia'
+  import { useRouter } from "vue-router"
 
   const homeStore = useHomeStore()
   const { houseList } = storeToRefs(homeStore)
+  const router = useRouter()
+
+  function itemClick(item) {
+    router.push('/detail/' + item.houseId)
+  }
 
 </script>
 
 <style scoped>
 .content {
   margin-bottom: 50px;
+
   .title {
     padding: 0 16px;
     font-size: 18px;
     color: #333;
     height: 48px;
     line-height: 48px;
-    
+
   }
 
   .list {

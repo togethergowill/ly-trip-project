@@ -1,7 +1,8 @@
  :root {
    --primary-color: #ff9854;
    --van-gray-6: var(--primary-color);
-   --van-primary-color: var(--primary-color)
+   --van-primary-color: var(--primary-color);
+
  }
 
  body,

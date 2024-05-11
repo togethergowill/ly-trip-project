@@ -157,7 +157,7 @@
         width: 74px;
         display: flex;
         align-items: center;
-
+      
         .text {
           position: relative;
           top: 1px;
