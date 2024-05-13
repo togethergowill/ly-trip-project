@@ -18,7 +18,6 @@ export function useScroll() {
         isReachBottom.value = true
       }
     }
-    console.log('hhhh')
   },100)
   // 当组件从组件树中移除后，需要移除监听，因为如果不移除监听，其他页面发生滚动，也能触发scrollListenerHandler事件
   onUnmounted(() => {
