@@ -9,7 +9,7 @@
               <div class="detail">
                 <span class="super">{{ commentData.scoreTitle }}</span>
                 <span class="count">{{ commentData.totalCount }}条评论</span>
-                <van-rate :model-value="3" allow-half color="#f99c54" void-icon="star" void-color="#999" size="12" />
+                <van-rate :model-value="commentData.overall" allow-half color="#f99c54" readonly void-icon="star" void-color="#999" size="12" />
               </div>
             </div>
             <div class="right">
@@ -50,7 +50,6 @@
     }
   })
 
-  console.log(props.commentData)
 </script>
 
 <style scoped>

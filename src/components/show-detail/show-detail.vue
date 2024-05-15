@@ -24,7 +24,7 @@
     },
     moreText: {
       type: String,
-      default: "默认更多内容"
+      default: ""
     }
   })
 
