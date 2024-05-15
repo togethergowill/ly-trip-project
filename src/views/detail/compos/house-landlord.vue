@@ -75,8 +75,9 @@
       justify-content: space-between;
 
       img {
-        width: 76px;
-        margin-left: -12px;
+        width: 60px;
+        margin: 5px 8px 5px 3px;
+        border-radius: 50%;
       }
     }
 
@@ -102,7 +103,8 @@
     width: 100px;
 
     span {
-      background: linear-gradient(90deg,#fa8c1d,#fcaf3f);;
+      background: linear-gradient(90deg, #fa8c1d, #fcaf3f);
+      ;
       color: #fff;
       padding: 5px 12px;
       border-radius: 3px;

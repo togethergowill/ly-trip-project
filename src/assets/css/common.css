@@ -17,6 +17,14 @@
    color: #333;
  }
 
+ .full_page {
+   position: relative;
+   z-index: 999;
+   height: 100vh;
+   background-color: #fff;
+   overflow-y: auto;
+ }
+
  .icon_check {
    display: inline-block;
    width: 12px;

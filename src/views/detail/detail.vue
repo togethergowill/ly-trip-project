@@ -1,25 +1,30 @@
 <template>
-  <div class="detail">
+  <div class="detail" ref="detailRef">
+    <tabbar-control :title="names" v-show="isShowTabbar" @subIndex="tabbarClick" ref="tabControllRef"></tabbar-control>
+
     <van-nav-bar title="房屋详情" left-text="返回" left-arrow @click-left="onClickLeft" />
-    <template v-if="mainPart">
-      <tabbar-control :title="names" v-show="isShowTabbar" @subIndex="tabbarClick"></tabbar-control>
-      <swipe :swipeData="mainPart.topModule.housePicture.housePics" />
-      <house-info name="描述" :ref="getSectionRef" :top-data="mainPart.topModule" />
-      <house-facility name="设施" :ref="getSectionRef"
-        :facility-data="mainPart.dynamicModule.facilityModule.houseFacility"></house-facility>
-      <house-landlord name="房东" :ref="getSectionRef"
-        :landlord-data="mainPart.dynamicModule.landlordModule"></house-landlord>
-      <house-comment name="评论" :ref="getSectionRef"
-        :comment-data="mainPart.dynamicModule.commentModule"></house-comment>
-      <nearby-house name="周边" :ref="getSectionRef" :map-data="mainPart.dynamicModule.positionModule"></nearby-house>
-      <checkin-notice name="须知" :ref="getSectionRef"
-        :order-rules="mainPart.dynamicModule.rulesModule.orderRules"></checkin-notice>
-    </template>
+
+    <div class="main" v-memo="[mainPart]">
+      <template v-if="mainPart">
+        <swipe name="描述" :ref="getSectionRef" :swipeData="mainPart.topModule.housePicture.housePics" />
+        <house-info :top-data="mainPart.topModule" />
+        <house-facility name="设施" :ref="getSectionRef"
+          :facility-data="mainPart.dynamicModule.facilityModule.houseFacility"></house-facility>
+        <house-landlord name="房东" :ref="getSectionRef"
+          :landlord-data="mainPart.dynamicModule.landlordModule"></house-landlord>
+        <house-comment name="评论" :ref="getSectionRef"
+          :comment-data="mainPart.dynamicModule.commentModule"></house-comment>
+        <nearby-house name="周边" :ref="getSectionRef" :map-data="mainPart.dynamicModule.positionModule"></nearby-house>
+        <checkin-notice name="须知" :ref="getSectionRef"
+          :order-rules="mainPart.dynamicModule.rulesModule.orderRules"></checkin-notice>
+      </template>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, computed, watch } from 'vue'
   import { getDetailInfos } from '@/services'
   import { useRoute, useRouter } from "vue-router"
 
@@ -56,16 +61,24 @@
 
   function getSectionRef(value) {
     //  if(!value) return
-    const name = value.$el.getAttribute('name')
-    sectionEls.value[name] = value.$el
+    const name = value?.$el.getAttribute('name')
+    sectionEls.value[name] = value?.$el
   }
 
   // 1.2 使用计算属性获取到names
   const names = computed(() => Object.keys(sectionEls.value))
 
   // 1.3 页面滚动到300px的时候显示isShowTabbar
+  const detailRef = ref()
+  // const { scrollTop } = useScroll(detailRef)
   const { scrollTop } = useScroll()
   const isShowTabbar = computed(() => scrollTop.value >= 300)
+
+  // 4. 当点击的时候，不应该再监听scrollTop，这个scrollTop交个点击事件控制就行
+  // 4.1 使用isClick来控制当点击事件发生后，不进行滚动监听
+  let isClick = false
+  // 4.2  scrollTop >= offsetTop，恢复监听
+  let currentDistance = 0
 
   // 2. 点击tabbar-item跳转到对应option的位置
   function tabbarClick(index) {
@@ -73,13 +86,40 @@
     const el = sectionEls.value[key]
     let distance = el.offsetTop - 42
 
+    isClick = true
+    currentDistance = distance
+
+    // 2.1 做法一、监听html页面的滚动
     document.documentElement.scrollTo({
       top: distance,
       behavior: "smooth",
     })
 
+    // 2.2 做法二、监听detail页面的滚动
+    // detailRef.value.scrollTo({
+    //   top: distance
+    // })
   }
 
+  // 3. 页面滚动的时候对应tabbar-item的index获取，并跳转item
+  const tabControllRef = ref()
+  watch(scrollTop, (newValue) => {
+    if (Math.floor(newValue) === currentDistance) {
+      isClick = false
+    }
+    if (isClick) return
+    const els = Object.values(sectionEls.value)
+    const values = els.map((el) => el.offsetTop)
+
+    let tabIndex = values.length - 1
+    for (const index in values) {
+      if (values[index] >= newValue + 44) {
+        tabIndex = index - 1
+        break
+      }
+    }
+    tabControllRef.value.currentIndex = tabIndex
+  })
 
 </script>
 
@@ -87,5 +127,6 @@
 .detail {
   --van-nav-bar-title-text-color: var(--primary-color);
   --van-font-bold: 500;
+  margin-bottom: 400px
 }
 </style>

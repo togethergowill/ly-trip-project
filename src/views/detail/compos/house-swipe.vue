@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="house-swipe">
     <van-swipe class="swipe" :autoplay="3000" indicator-color="#fff">
       <template v-for="(item, index) in swipeData" :key="item.url">
         <van-swipe-item>
@@ -61,7 +61,7 @@
 </script>
 
 <style lang="less" scoped>
-.detail {
+.house-swipe {
   .swipe {
     img {
       width: 100%;
